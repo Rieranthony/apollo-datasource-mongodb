@@ -15,12 +15,8 @@ class MongoDataSource extends DataSource {
       )
     }
 
-    if (isModel(collection)) {
-      this.model = collection
-      this.collection = this.model.collection
-    } else {
-      this.collection = collection
-    }
+    this.model = collection
+    this.collection = collection
   }
 
   // https://github.com/apollographql/apollo-server/blob/master/packages/apollo-datasource/src/index.ts
