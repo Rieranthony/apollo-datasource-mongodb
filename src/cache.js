@@ -23,7 +23,10 @@ export const createCachingMethods = ({ collection, cache }) => {
           }
         })
         .exec()
-        .then(orderDocs(ids))
+        .then(docs => {
+          const transformedDocs = docs.map(doc => doc.toObject())
+          return orderDocs(ids)(transformedDocs)
+        })
   } else {
     dataLoader = async ids =>
       collection
