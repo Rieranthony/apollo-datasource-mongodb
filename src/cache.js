@@ -15,9 +15,9 @@ export const createCachingMethods = ({ collection, cache }) => {
   let dataLoader = async ids => collection.find({ _id: { $in: ids } })
 
   if (isModel(collection)) {
-    collectionDataLoader = collectionDataLoader.exec().then(orderDocs(ids))
+    dataLoader = dataLoader.exec().then(orderDocs(ids))
   } else {
-    collectionDataLoader = collectionDataLoader.toArray().then(orderDocs(ids))
+    dataLoader = dataLoader.toArray().then(orderDocs(ids))
   }
 
   const loader = new DataLoader(ids => dataLoader(ids))
