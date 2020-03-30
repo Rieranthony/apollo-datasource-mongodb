@@ -12,13 +12,13 @@ const orderDocs = ids => docs => {
 }
 
 export const createCachingMethods = ({ collection, cache }) => {
-  const collectionDataLoader = ids =>
+  const collectionDataLoader = async ids =>
     collection
       .find({ _id: { $in: ids } })
       .toArray()
       .then(orderDocs(ids))
 
-  const modelDataLoader = ids =>
+  const modelDataLoader = async ids =>
     collection
       .find({ _id: { $in: ids } })
       .lean()
@@ -31,7 +31,7 @@ export const createCachingMethods = ({ collection, cache }) => {
     ? modelDataLoader
     : collectionDataLoader
 
-  const loader = new DataLoader(dataloader)
+  const loader = new DataLoader(ids => dataloader(ids))
 
   const cachePrefix = `mongo-${getCollection(collection).collectionName}-`
 
