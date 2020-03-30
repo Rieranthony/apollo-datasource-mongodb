@@ -12,26 +12,15 @@ const orderDocs = ids => docs => {
 }
 
 export const createCachingMethods = ({ collection, cache }) => {
-  const collectionDataLoader = async ids =>
-    collection
-      .find({ _id: { $in: ids } })
-      .toArray()
-      .then(orderDocs(ids))
+  let dataLoader = async ids => collection.find({ _id: { $in: ids } })
 
-  const modelDataLoader = async ids =>
-    collection
-      .find({ _id: { $in: ids } })
-      .lean()
-      .exec((err, docs) => {
-        // TODO: Handling error here ?
-        return orderDocs(ids)(docs)
-      })
+  if (isModel(collection)) {
+    collectionDataLoader = collectionDataLoader.exec().then(orderDocs(ids))
+  } else {
+    collectionDataLoader = collectionDataLoader.toArray().then(orderDocs(ids))
+  }
 
-  const dataloader = isModel(collection)
-    ? modelDataLoader
-    : collectionDataLoader
-
-  const loader = new DataLoader(ids => dataloader(ids))
+  const loader = new DataLoader(ids => dataLoader(ids))
 
   const cachePrefix = `mongo-${getCollection(collection).collectionName}-`
 
