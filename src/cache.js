@@ -12,12 +12,28 @@ const orderDocs = ids => docs => {
 }
 
 export const createCachingMethods = ({ collection, cache }) => {
-  let dataLoader = async ids => collection.find({ _id: { $in: ids } })
+  let dataLoader
 
   if (isModel(collection)) {
-    dataLoader = dataLoader.exec().then(orderDocs(ids))
+    dataLoader = async ids =>
+      collection
+        .find({
+          _id: {
+            $in: ids
+          }
+        })
+        .exec()
+        .then(orderDocs(ids))
   } else {
-    dataLoader = dataLoader.toArray().then(orderDocs(ids))
+    dataLoader = async ids =>
+      collection
+        .find({
+          _id: {
+            $in: ids
+          }
+        })
+        .toArray()
+        .then(orderDocs(ids))
   }
 
   const loader = new DataLoader(ids => dataLoader(ids))

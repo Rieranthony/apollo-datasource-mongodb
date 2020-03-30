@@ -3,7 +3,7 @@ import { ApolloError } from 'apollo-server-errors'
 import { InMemoryLRUCache } from 'apollo-server-caching'
 
 import { createCachingMethods } from './cache'
-import { isCollectionOrModel, isModel } from './helpers'
+import { isCollectionOrModel } from './helpers'
 
 class MongoDataSource extends DataSource {
   constructor(collection) {
