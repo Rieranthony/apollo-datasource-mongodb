@@ -1,7 +1,7 @@
 {
-  "name": "apollo-datasource-mongodb",
-  "version": "0.2.5",
-  "description": "Apollo data source for MongoDB",
+  "name": "@frenchriera/apollo-datasource-mongodb",
+  "version": "0.2.6",
+  "description": "Apollo data source for MongoDB and mongoose",
   "main": "dist/index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -39,7 +39,7 @@
   "homepage": "https://github.com/GraphQLGuide/apollo-datasource-mongodb",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GraphQLGuide/apollo-datasource-mongodb"
+    "url": "git+https://github.com/GraphQLGuide/apollo-datasource-mongodb.git"
   },
   "license": "MIT",
   "bugs": {
