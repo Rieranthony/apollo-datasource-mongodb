@@ -1,6 +1,6 @@
 {
   "name": "@frenchriera/apollo-datasource-mongodb",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Apollo data source for MongoDB and mongoose",
   "main": "dist/index.js",
   "types": "index.d.ts",
