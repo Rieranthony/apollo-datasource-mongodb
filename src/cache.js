@@ -3,41 +3,41 @@ import DataLoader from 'dataloader'
 import { getCollection, isModel } from './helpers'
 
 // https://github.com/graphql/dataloader#batch-function
-const orderDocs = ids => docs => {
+const orderDocs = (ids) => (docs) => {
   const idMap = {}
-  docs.forEach(doc => {
+  docs.forEach((doc) => {
     idMap[doc._id] = doc
   })
-  return ids.map(id => idMap[id])
+  return ids.map((id) => idMap[id])
 }
 
 export const createCachingMethods = ({ collection, cache }) => {
   let dataLoader
 
   if (isModel(collection)) {
-    dataLoader = async ids =>
+    dataLoader = async (ids) =>
       collection
         .find({
           _id: {
-            $in: ids
-          }
+            $in: ids,
+          },
         })
-        .lean({ getters: true })
+        .lean({ getters: true, virtuals: true })
         .exec()
         .then(orderDocs(ids))
   } else {
-    dataLoader = async ids =>
+    dataLoader = async (ids) =>
       collection
         .find({
           _id: {
-            $in: ids
-          }
+            $in: ids,
+          },
         })
         .toArray()
         .then(orderDocs(ids))
   }
 
-  const loader = new DataLoader(ids => dataLoader(ids))
+  const loader = new DataLoader((ids) => dataLoader(ids))
 
   const cachePrefix = `mongo-${getCollection(collection).collectionName}-`
 
@@ -59,9 +59,9 @@ export const createCachingMethods = ({ collection, cache }) => {
       return doc
     },
     findManyByIds: (ids, { ttl } = {}) => {
-      return Promise.all(ids.map(id => methods.findOneById(id, { ttl })))
+      return Promise.all(ids.map((id) => methods.findOneById(id, { ttl })))
     },
-    deleteFromCacheById: id => cache.delete(cachePrefix + id)
+    deleteFromCacheById: (id) => cache.delete(cachePrefix + id),
   }
 
   return methods
